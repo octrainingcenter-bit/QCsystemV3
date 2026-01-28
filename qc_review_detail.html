@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสอบรายละเอียด - Customer: 9600000xxxxx</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #f5f7fa;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-back {
+            background: white;
+            color: #2c3e50;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #ecf0f1;
+            transform: translateY(-1px);
+        }
+
+        .tabs-container {
+            background: white;
+            border-bottom: 2px solid #e1e8ed;
+            padding: 0 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .content {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card-based layout like the image */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .section-header-icon {
+            font-size: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background: white;
+            border: 2px solid #e8ecf1;
+            border-left: 4px solid #667eea;
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            border-left-color: #764ba2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .info-card-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #7f8c8d;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card-value {
+            font-size: 13px;
+            color: #2c3e50;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .info-card-value a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .info-card-value a:hover {
+            text-decoration: underline;
+        }
+
+        /* QC Recheck Table */
+        .qc-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #e8ecf1;
+        }
+
+        .qc-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .qc-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .qc-table td {
+            padding: 12px;
+            border: 1px solid #e8ecf1;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        .qc-table .label-cell {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            width: 28%;
+        }
+
+        .qc-table .input-cell {
+            background: white;
+        }
+
+        .radio-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 24px;
+        }
+
+        .radio-inline input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .radio-inline label {
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .radio-inline.pass label {
+            color: #27ae60;
+        }
+
+        .radio-inline.error label {
+            color: #e74c3c;
+        }
+
+        .input-text {
+            width: 100%;
+            padding: 9px 12px;
+            border: 2px solid #d1d8e0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .input-text:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-text.red-text {
+            color: #e74c3c;
+            font-weight: 600;
+            border-color: #fadbd8;
+            background: #fef5f4;
+        }
+
+        .input-text.red-text::placeholder {
+            color: #bdc3c7;
+            font-weight: normal;
+        }
+
+        .textarea-comment {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #d1d8e0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 90px;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-comment:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        select.input-text {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e74c3c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 35px;
+        }
+
+        .income-fields {
+            display: none;
+        }
+
+        .income-fields.show {
+            display: contents;
+        }
+
+        .income-row {
+            background: #e8f8f5 !important;
+        }
+
+        .btn-save-large {
+            width: 100%;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-save-large:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-save-large:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .qc-table .label-cell {
+                width: 40%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <div class="header-icon">📋</div>
+                <h1>ตรวจสอบรายละเอียด - Customer: 9600000xxxxx</h1>
+            </div>
+            <button class="btn-back" onclick="window.history.back()">← กลับหน้าแรก</button>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" data-tab="scoring">
+                    📊 SCORING
+                </button>
+                <button class="tab" data-tab="registration">
+                    📝 REGISTRATION CONTENT
+                </button>
+                <button class="tab" data-tab="verify">
+                    ✅ VERIFY
+                </button>
+                <button class="tab" data-tab="qc">
+                    🔍 QC RECHECK
+                </button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Tab 1: Scoring -->
+            <div class="tab-content active" id="scoring">
+                <div class="section-header">
+                    <span class="section-header-icon">📊</span>
+                    Scoring Information
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">Customer No:</div><div class="info-card-value">9600000xxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อ (ภาษาไทย):</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">นามสกุล (ภาษาไทย):</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อเล่น:</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">วันเดือนปีเกิด(วันที่):</div><div class="info-card-value">mm-dd-yyyy</div></div>
+                    <div class="info-card"><div class="info-card-label">หมายเลขบัตรประจำตัวประชาชน:</div><div class="info-card-value">xxxxxxxxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัดที่อยู่ปัจจุบัน:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัดที่ทำงาน:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัดที่อยู่ตามบัตรประชาชน:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">THPEP:</div><div class="info-card-value">No</div></div>
+                    <div class="info-card"><div class="info-card-label">Risk Business:</div><div class="info-card-value">อื่นๆ</div></div>
+                    <div class="info-card"><div class="info-card-label">Risk Level:</div><div class="info-card-value">Medium</div></div>
+                    <div class="info-card"><div class="info-card-label">score_rank:</div><div class="info-card-value">A</div></div>
+                    <div class="info-card"><div class="info-card-label">Scoring limit:</div><div class="info-card-value">10,000</div></div>
+                    <div class="info-card"><div class="info-card-label">รายได้ในใบสมัคร:</div><div class="info-card-value">15,000</div></div>
+                    <div class="info-card"><div class="info-card-label">Residual Income Check:</div><div class="info-card-value">Residual Income OK<br>RI = 21,524 THB</div></div>
+                    <div class="info-card"><div class="info-card-label">Verify Home:</div><div class="info-card-value">Fail</div></div>
+                    <div class="info-card"><div class="info-card-label">Verify Customer:</div><div class="info-card-value">Pass</div></div>
+                    <div class="info-card"><div class="info-card-label">Verify Work place:</div><div class="info-card-value">Pass</div></div>
+                    <div class="info-card"><div class="info-card-label">Verify Contact person:</div><div class="info-card-value">Pass</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">📄</span>
+                    เอกสาร
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">Application file:</div><div class="info-card-value"><a href="#" onclick="alert('เปิดไฟล์'); return false;">3202038000458_20260127134804629.pdf (5MB)</a></div></div>
+                    <div class="info-card"><div class="info-card-label">เอกสารเพิ่มเติม:</div><div class="info-card-value"><a href="#" onclick="alert('เปิดไฟล์'); return false;">AcctSt_Sep25 (7).pdf (554KB)</a></div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">👥</span>
+                    Contact Person
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">Contact Person 1:</div><div class="info-card-value">TR1 TR1<br>ความสัมพันธ์: 6.ญาติ<br>เบอร์โทร: 1234567894<br>รู้จัก/ฝากเรื่องได้</div></div>
+                    <div class="info-card"><div class="info-card-label">Contact Person 2:</div><div class="info-card-value">TR2 TR2<br>ความสัมพันธ์: 6.ญาติ<br>เบอร์โทร: 1234567891<br>รู้จัก/ฝากเรื่องได้</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">✅</span>
+                    Approval Information
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">User responsibility:</div><div class="info-card-value">STXXXXXX</div></div>
+                    <div class="info-card"><div class="info-card-label">User Decision:</div><div class="info-card-value">PPXXXXXX</div></div>
+                    <div class="info-card"><div class="info-card-label">Credit limit:</div><div class="info-card-value">34,200</div></div>
+                    <div class="info-card"><div class="info-card-label">Card type:</div><div class="info-card-value">e-Card</div></div>
+                    <div class="info-card"><div class="info-card-label">Product/Loan:</div><div class="info-card-value">Money card</div></div>
+                    <div class="info-card"><div class="info-card-label">Card_No:</div><div class="info-card-value">XXXX-XXXX-XXXX-XXXX</div></div>
+                    <div class="info-card"><div class="info-card-label">Approval/Reject:</div><div class="info-card-value">Approve</div></div>
+                    <div class="info-card"><div class="info-card-label">free_space:</div><div class="info-card-value">25-12 โบนัส12000</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">💬</span>
+                    Comment
+                </div>
+                <div class="info-card" style="grid-column: 1 / -1;">
+                    <div class="info-card-value">
+                        ** คำนวณรายได้แบบเดิม เนื่องจากSt.6เดือน เฉลี่ยรายได้มากกว่า<br>
+                        ** พนักงานบริการ<br>
+                        ** โบนัสเดือน 12000
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Registration Content -->
+            <div class="tab-content" id="registration">
+                <div class="section-header">
+                    <span class="section-header-icon">👤</span>
+                    ข้อมูลส่วนบุคคล
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">Customer No:</div><div class="info-card-value">9600000xxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">เพศ:</div><div class="info-card-value">Mr.</div></div>
+                    <div class="info-card"><div class="info-card-label">คำนำหน้า:</div><div class="info-card-value">(select one)</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อ(ภาษาไทย):</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">นามสกุล(ภาษาไทย):</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อเล่น:</div><div class="info-card-value">ทดสอบ 1</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อ(ภาษาอังกฤษ):</div><div class="info-card-value">Test 1</div></div>
+                    <div class="info-card"><div class="info-card-label">นามสกุล(ภาษาอังกฤษ):</div><div class="info-card-value">Test 1</div></div>
+                    <div class="info-card"><div class="info-card-label">วันเดือนปีเกิด(วันของสัปดาห์):</div><div class="info-card-value">Tuesday</div></div>
+                    <div class="info-card"><div class="info-card-label">วันเดือนปีเกิด(วันที่):</div><div class="info-card-value">mm-dd-yyyy</div></div>
+                    <div class="info-card"><div class="info-card-label">หมายเลขบัตรประจำตัวประชาชน:</div><div class="info-card-value">xxxxxxxxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">วันหมดอายุบัตร:</div><div class="info-card-value">mm-dd-yyyy</div></div>
+                    <div class="info-card"><div class="info-card-label">THPEP:</div><div class="info-card-value">No</div></div>
+                    <div class="info-card"><div class="info-card-label">Risk Business:</div><div class="info-card-value">อื่นๆ</div></div>
+                    <div class="info-card"><div class="info-card-label">สัญชาติ:</div><div class="info-card-value">ไทย</div></div>
+                    <div class="info-card"><div class="info-card-label">ประวัติการศึกษา:</div><div class="info-card-value">3.มัธยมศึกษาตอนปลาย</div></div>
+                    <div class="info-card"><div class="info-card-label">สถานภาพสมรส:</div><div class="info-card-value">2.สมรสจดทะเบียน</div></div>
+                    <div class="info-card"><div class="info-card-label">จำนวนบุตร:</div><div class="info-card-value">2</div></div>
+                    <div class="info-card"><div class="info-card-label">อีเมล:</div><div class="info-card-value">xxxxxxx@gmail.com</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">🏠</span>
+                    ที่อยู่ตามบัตรประชาชน
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">เลขที่บ้าน_หมู่:</div><div class="info-card-value">123</div></div>
+                    <div class="info-card"><div class="info-card-label">ตรอก_ซอย_ถนน:</div><div class="info-card-value">-</div></div>
+                    <div class="info-card"><div class="info-card-label">เขต:</div><div class="info-card-value">ห้วยขวาง</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัด:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">รหัสไปรษณีย์:</div><div class="info-card-value">10310</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">📍</span>
+                    ที่อยู่ปัจจุบัน
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">เลขที่บ้าน:</div><div class="info-card-value">123</div></div>
+                    <div class="info-card"><div class="info-card-label">แขวง:</div><div class="info-card-value">ห้วยขวาง</div></div>
+                    <div class="info-card"><div class="info-card-label">เขต:</div><div class="info-card-value">ห้วยขวาง</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัด:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">รหัสไปรษณีย์:</div><div class="info-card-value">10310</div></div>
+                    <div class="info-card"><div class="info-card-label">เบอร์โทรศัพท์มือถือ:</div><div class="info-card-value">0123456789</div></div>
+                    <div class="info-card"><div class="info-card-label">จำนวนสมาชิกในครอบครัว:</div><div class="info-card-value">1</div></div>
+                    <div class="info-card"><div class="info-card-label">ระยะเวลาที่อาศัย:</div><div class="info-card-value">15 ปี 5 เดือน</div></div>
+                    <div class="info-card"><div class="info-card-label">ประเภทที่พักอาศัย:</div><div class="info-card-value">บ้านตัวเอง</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">🏢</span>
+                    ที่ทำงาน
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">ชื่อบริษัท:</div><div class="info-card-value">บจก.ทดสอบ1</div></div>
+                    <div class="info-card"><div class="info-card-label">คำนำหน้าบริษัท:</div><div class="info-card-value">บจก.</div></div>
+                    <div class="info-card"><div class="info-card-label">เลขที่:</div><div class="info-card-value">123</div></div>
+                    <div class="info-card"><div class="info-card-label">แขวง:</div><div class="info-card-value">ห้วยขวาง</div></div>
+                    <div class="info-card"><div class="info-card-label">เขต:</div><div class="info-card-value">ห้วยขวาง</div></div>
+                    <div class="info-card"><div class="info-card-label">จังหวัด:</div><div class="info-card-value">กรุงเทพมหานคร</div></div>
+                    <div class="info-card"><div class="info-card-label">รหัสไปรษณีย์:</div><div class="info-card-value">10310</div></div>
+                    <div class="info-card"><div class="info-card-label">เบอร์โทรศัพท์(ที่ทำงานประจำ):</div><div class="info-card-value">02xxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">เบอร์โทรศัพท์สาขาใหญ่:</div><div class="info-card-value">02xxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">ประเภทธุรกิจ:</div><div class="info-card-value">Manufacturing</div></div>
+                    <div class="info-card"><div class="info-card-label">จำนวนพนักงาน:</div><div class="info-card-value">1,000</div></div>
+                    <div class="info-card"><div class="info-card-label">c_department:</div><div class="info-card-value">QC</div></div>
+                    <div class="info-card"><div class="info-card-label">ตำแหน่ง:</div><div class="info-card-value">พนักงานในสายการผลิต</div></div>
+                    <div class="info-card"><div class="info-card-label">อาชีพ:</div><div class="info-card-value">พนักงานโรงงาน</div></div>
+                    <div class="info-card"><div class="info-card-label">สภาพการจ้าง:</div><div class="info-card-value">ลูกจ้างประจำ</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">💰</span>
+                    รายได้และการเงิน
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">เงินเดือน+รายได้ประจำต่อเดือน:</div><div class="info-card-value">12,000</div></div>
+                    <div class="info-card"><div class="info-card-label">รายได้อื่นๆ ต่อเดือน:</div><div class="info-card-value">5,000</div></div>
+                    <div class="info-card"><div class="info-card-label">ค่าเฉลี่ยรายได้อื่นๆ สะสม:</div><div class="info-card-value">6,500</div></div>
+                    <div class="info-card"><div class="info-card-label">ยอดรวมรายได้ต่อเดือน:</div><div class="info-card-value">17,000</div></div>
+                    <div class="info-card"><div class="info-card-label">ประเภทเอกสารแสดงรายได้:</div><div class="info-card-value">สลิปเงินเดือน</div></div>
+                    <div class="info-card"><div class="info-card-label">จำนวนปีที่ทำงาน:</div><div class="info-card-value">15 ปี 5 เดือน</div></div>
+                    <div class="info-card"><div class="info-card-label">วิธีรับเงินเดือน:</div><div class="info-card-value">1.โอนเงินเข้าธนาคาร</div></div>
+                    <div class="info-card"><div class="info-card-label">ธนาคาร:</div><div class="info-card-value">SCB</div></div>
+                    <div class="info-card"><div class="info-card-label">เลขที่บัญชี:</div><div class="info-card-value">xxxxxxxxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">วงเงินที่ต้องการ:</div><div class="info-card-value">50,000 THB</div></div>
+                    <div class="info-card"><div class="info-card-label">รายได้เสริมต่อเดือน:</div><div class="info-card-value">8,000 THB</div></div>
+                    <div class="info-card"><div class="info-card-label">รายได้คู่สมรสต่อเดือน:</div><div class="info-card-value">15,000 THB</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">⚙️</span>
+                    การตั้งค่า
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">e-Statement:</div><div class="info-card-value">Paper Statement</div></div>
+                    <div class="info-card"><div class="info-card-label">Card Type:</div><div class="info-card-value">e-Card</div></div>
+                    <div class="info-card"><div class="info-card-label">NCB:</div><div class="info-card-value">ยินยอม</div></div>
+                    <div class="info-card"><div class="info-card-label">Scoring Model:</div><div class="info-card-value">ยินยอม</div></div>
+                    <div class="info-card"><div class="info-card-label">MKT:</div><div class="info-card-value">ยินยอม</div></div>
+                    <div class="info-card"><div class="info-card-label">Due:</div><div class="info-card-value">วันที่ 2</div></div>
+                    <div class="info-card"><div class="info-card-label">สื่อ:</div><div class="info-card-value">5.เว็บ</div></div>
+                    <div class="info-card"><div class="info-card-label">สถานที่จัดส่งเอกสาร:</div><div class="info-card-value">Work place</div></div>
+                    <div class="info-card"><div class="info-card-label">User responsibility:</div><div class="info-card-value">STXXXXXX</div></div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Verify -->
+            <div class="tab-content" id="verify">
+                <div class="section-header">
+                    <span class="section-header-icon">📞</span>
+                    1. เช็คเบอร์จดทะเบียน
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">ที่ทำงาน เบอร์โทร:</div><div class="info-card-value">02xxxxxxx (Google)</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อบริษัท:</div><div class="info-card-value">บจก.ทดสอบ1 (ตรง)</div></div>
+                    <div class="info-card"><div class="info-card-label">ที่อยู่บริษัท:</div><div class="info-card-value">ตรง</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">🏢</span>
+                    2. Verify Work Place
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">Work place:</div><div class="info-card-value">เบอร์ที่ทำงานประจำ</div></div>
+                    <div class="info-card"><div class="info-card-label">เป็นพนักงาน:</div><div class="info-card-value">ใช่</div></div>
+                    <div class="info-card"><div class="info-card-label">ชื่อผู้ให้ข้อมูล:</div><div class="info-card-value">เจ้าหน้าผู้หญิง ไม่ยอมบอกชื่อ</div></div>
+                    <div class="info-card"><div class="info-card-label">ตำแหน่ง:</div><div class="info-card-value">ฝ่ายบุคคล</div></div>
+                    <div class="info-card"><div class="info-card-label">ทุนจดทะเบียน:</div><div class="info-card-value">880,000,000 บาท</div></div>
+                    <div class="info-card"><div class="info-card-label">ปีส่งงบการเงิน:</div><div class="info-card-value">2568</div></div>
+                    <div class="info-card"><div class="info-card-label">ผลการตรวจสอบ DBD:</div><div class="info-card-value">Active</div></div>
+                    <div class="info-card"><div class="info-card-label">ตรวจสอบ SSO:</div><div class="info-card-value">พบ</div></div>
+                </div>
+
+                <div class="section-header">
+                    <span class="section-header-icon">👤</span>
+                    3. Verify Customer
+                </div>
+                <div class="card-grid">
+                    <div class="info-card"><div class="info-card-label">ผลการตรวจสอบ:</div><div class="info-card-value">ติดต่อได้</div></div>
+                    <div class="info-card"><div class="info-card-label">หมายเลขบัตรประจำตัวประชาชน:</div><div class="info-card-value">xxxxxxxxxxxxx</div></div>
+                    <div class="info-card"><div class="info-card-label">วันเดือนปีเกิด:</div><div class="info-card-value">mm-dd-yyyy (Tuesday)</div></div>
+                    <div class="info-card"><div class="info-card-label">ประเภทบัตร:</div><div class="info-card-value">e-Card</div></div>
+                    <div class="info-card"><div class="info-card-label">ยืนยันการได้รับบัตร:</div><div class="info-card-value">ไม่ได้รับบัตร</div></div>
+                    <div class="info-card"><div class="info-card-label">ยืนยันที่จัดส่งเอกสาร:</div><div class="info-card-value">2.Workspace</div></div>
+                    <div class="info-card"><div class="info-card-label">Due:</div><div class="info-card-value">วันที่ 2</div></div>
+                </div>
+            </div>
+
+            <!-- Tab 4: QC Recheck -->
+            <div class="tab-content" id="qc">
+                <div class="qc-section">
+                    <div class="qc-section-title">1. Approval Recheck</div>
+                    <table class="qc-table">
+                        <tr>
+                            <td class="label-cell">1.ตำแหน่ง</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="position" id="pos-pass" value="pass">
+                                    <label for="pos-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="position" id="pos-error" value="error">
+                                    <label for="pos-error">⭕ Error</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">2.อาชีพ</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="occupation" id="occ-pass" value="pass">
+                                    <label for="occ-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="occupation" id="occ-error" value="error">
+                                    <label for="occ-error">⭕ Error</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">3.การจ้างงาน</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="employment" id="emp-pass" value="pass">
+                                    <label for="emp-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="employment" id="emp-error" value="error">
+                                    <label for="emp-error">⭕ Error</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">4.รายได้</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="income" id="inc-pass" value="pass">
+                                    <label for="inc-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="income" id="inc-error" value="error">
+                                    <label for="inc-error">⭕ Error</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tbody class="income-fields" id="income-fields">
+                            <tr class="income-row">
+                                <td class="label-cell">เงินเดือน+รายได้ประจำต่อเดือน</td>
+                                <td class="input-cell">
+                                    <input type="number" class="input-text red-text" placeholder="ระบุจำนวน">
+                                </td>
+                            </tr>
+                            <tr class="income-row">
+                                <td class="label-cell">รายได้อื่นๆ ต่อเดือน</td>
+                                <td class="input-cell">
+                                    <input type="number" class="input-text red-text" placeholder="ระบุจำนวน">
+                                </td>
+                            </tr>
+                            <tr class="income-row">
+                                <td class="label-cell">ค่าเฉลี่ยรายได้อื่นๆ สะสม</td>
+                                <td class="input-cell">
+                                    <input type="number" class="input-text red-text" placeholder="ระบุจำนวน">
+                                </td>
+                            </tr>
+                            <tr class="income-row">
+                                <td class="label-cell">ยอดรวมรายได้ต่อเดือนที่นำมาคำนวณ</td>
+                                <td class="input-cell">
+                                    <input type="number" class="input-text red-text" placeholder="ระบุจำนวน">
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tr>
+                            <td class="label-cell">Recheck Result</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="recheck_result" id="rr-pass" value="pass">
+                                    <label for="rr-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="recheck_result" id="rr-error" value="error">
+                                    <label for="rr-error">⭕ Error</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Error Topic</td>
+                            <td class="input-cell">
+                                <select class="input-text red-text">
+                                    <option value="">เลือก Error Topic</option>
+                                    <option>1.Error Salary</option>
+                                    <option>2.Error Occupation Type</option>
+                                    <option>3.Not Match Condition</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Error Cause</td>
+                            <td class="input-cell">
+                                <input type="text" class="input-text" placeholder="-ช่องสำหรับใส่ Comment">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Comment</td>
+                            <td class="input-cell">
+                                <textarea class="textarea-comment" placeholder="-ช่องสำหรับใส่ Comment"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="qc-section">
+                    <div class="qc-section-title">2. PDPA</div>
+                    <table class="qc-table">
+                        <tr>
+                            <td class="label-cell">PDPA</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="pdpa" id="pdpa-pass" value="pass">
+                                    <label for="pdpa-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="pdpa" id="pdpa-error" value="error">
+                                    <label for="pdpa-error">⭕ Patch data</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Scoring Model</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="scoring" id="scr-pass" value="pass">
+                                    <label for="scr-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="scoring" id="scr-error" value="error">
+                                    <label for="scr-error">⭕ Patch data</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">MKT</td>
+                            <td class="input-cell">
+                                <div class="radio-inline pass">
+                                    <input type="radio" name="mkt" id="mkt-pass" value="pass">
+                                    <label for="mkt-pass">⭕ Pass</label>
+                                </div>
+                                <div class="radio-inline error">
+                                    <input type="radio" name="mkt" id="mkt-error" value="error">
+                                    <label for="mkt-error">⭕ Patch data</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label-cell">Comment</td>
+                            <td class="input-cell">
+                                <textarea class="textarea-comment" placeholder="-ช่องสำหรับใส่ Comment"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <table class="qc-table" style="margin-bottom: 20px;">
+                    <tr>
+                        <td class="label-cell">QC user</td>
+                        <td class="input-cell">
+                            <input type="text" class="input-text" value="KSXXXXXX" readonly style="background: #f8f9fa;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Recheck Date</td>
+                        <td class="input-cell">
+                            <input type="date" class="input-text" value="2026-01-28" readonly style="background: #f8f9fa;">
+                        </td>
+                    </tr>
+                </table>
+
+                <button class="btn-save-large" onclick="saveQC()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+
+        // Show income fields when Error is selected
+        document.getElementById('inc-error').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('income-fields').classList.add('show');
+            }
+        });
+
+        document.getElementById('inc-pass').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('income-fields').classList.remove('show');
+            }
+        });
+
+        // Save function
+        function saveQC() {
+            const formData = {
+                position: document.querySelector('input[name="position"]:checked')?.value,
+                occupation: document.querySelector('input[name="occupation"]:checked')?.value,
+                employment: document.querySelector('input[name="employment"]:checked')?.value,
+                income: document.querySelector('input[name="income"]:checked')?.value,
+                recheck_result: document.querySelector('input[name="recheck_result"]:checked')?.value,
+                pdpa: document.querySelector('input[name="pdpa"]:checked')?.value,
+                scoring: document.querySelector('input[name="scoring"]:checked')?.value,
+                mkt: document.querySelector('input[name="mkt"]:checked')?.value
+            };
+
+            const allFilled = Object.values(formData).every(val => val !== undefined);
+            
+            if (!allFilled) {
+                alert('⚠️ กรุณาเลือกผลการตรวจสอบให้ครบทุกข้อ');
+                return;
+            }
+
+            const hasRecheckError = ['position', 'occupation', 'employment', 'income'].some(f => formData[f] === 'error');
+            const hasPDPAError = ['pdpa', 'scoring', 'mkt'].some(f => formData[f] === 'error');
+
+            let recheckStatus = hasRecheckError ? 'Error' : 'Pass';
+            let pdpaStatus = hasPDPAError ? 'Patch data' : 'Pass';
+
+            alert(`✅ บันทึกสำเร็จ!\n\nRecheck Status: ${recheckStatus}\nPDPA Status: ${pdpaStatus}`);
+            
+            setTimeout(() => window.history.back(), 1500);
+        }
+    </script>
+</body>
+</html>
